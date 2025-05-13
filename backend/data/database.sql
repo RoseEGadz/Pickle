@@ -30,8 +30,7 @@ CREATE TABLE events (
     category_id INT,
     name VARCHAR(25) NOT NULL,
     olympic BOOLEAN,
-    categories_id INT,
-    FOREIGN KEY(categories_id) REFERENCES categories(id) ON DELETE CASCADE
+    FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
 INSERT INTO events(name, olympic, category_id)
@@ -74,26 +73,26 @@ VALUES
 CREATE TABLE notes (
     id SERIAL PRIMARY KEY,
     text TEXT,
-    users_id INT,
-    events_id INT,
-    FOREIGN KEY(users_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY(events_id) REFERENCES events(id) ON DELETE CASCADE
+    user_id INT,
+    event_id INT,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(event_id) REFERENCES events(id) ON DELETE CASCADE
 );
 
-INSERT INTO notes (text, users_id, events_id)
+INSERT INTO notes (text, user_id, event_id)
 VALUES('Need to work on keeping everything narrow', 1, 20);
 
 CREATE TABLE times (
     id SERIAL PRIMARY KEY,
-    users_id INT NOT NULL,
-    events_id INT NOT NULL,
+    user_id INT NOT NULL,
+    event_id INT NOT NULL,
     time INT NOT NULL,
     date DATE,
-    FOREIGN KEY (users_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (events_id) REFERENCES events(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );
 
-INSERT INTO times(events_id, users_id, time, date)
+INSERT INTO times(event_id, user_id, time, date)
 VALUES
     (20, 1, 70.84, '2020-03-24'),
     (20, 1, 71.10, '2020-01-07');
