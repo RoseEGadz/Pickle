@@ -1,19 +1,46 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
+from schemas import (
+    UserOut,
+    CategoryOut,
+    EventOut,
+    NoteUpdate,
+    NoteCreate,
+    TimeCreate,
+    NoteOut,
+    TimeOut,
+)
 import db
 
 app = FastAPI()
 
+origins = ["http://127.0.0.1:5173"]
+
+app.add_middleware(
+    middleware_class=CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/api/user")
+async def get_user():
+    user = db.get_user()
+    return user
+
 
 @app.get("/api/categories")
-async def get_categories():
+async def get_categories() -> list[CategoryOut]:
     categories = db.get_categories()
     return categories
 
 
 @app.get("/api/{category_id}/events")
-async def get_events_by_category(category_id: int):
+async def get_events_by_category(category_id: int) -> list[EventOut]:
     events = db.get_events_by_category(category_id)
     return events
 
@@ -25,20 +52,24 @@ async def get_times_and_note(event_id: int, user_id: int):
     return [times, note]
 
 
-@app.post("/api/{note_id}")
-async def edit_note(note_id: int, text):
-    new_note = db.edit_note(note_id, text)
+@app.post("/api/{event_id}/times")
+async def add_time(event_id: int, user_id: int, time: TimeCreate):
+    new_time = db.add_time(event_id, user_id, time)
     return
 
 
-@app.post("/api/{event_id}")
-async def add_time(event_id, time, date):
-    new_time = db.add_time(event_id, time, date)
+@app.post("/api/{event_id}/note")
+async def create_note(event_id: int, user_id: int, note: NoteCreate):
+    new_note = db.create_note(event_id, user_id, note)
     return
 
 
-# Route to handle requests for static assets
-# this is a catch all so it should be registered last
+@app.patch("/api/{note_id}/note")
+async def edit_note(note_id: int, note: NoteUpdate):
+    new_note = db.edit_note(note_id, note)
+    return
+
+
 @app.get("/{file_path}", response_class=FileResponse)
 def get_static_file(file_path: str):
     if Path("static/" + file_path).is_file():

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean, Float
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -42,5 +42,5 @@ class DBTime(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     event_id = Column(Integer, ForeignKey("events.id"))
-    time = Column(Integer, nullable=False)
+    time = Column(Float, nullable=False)
     date = Column(Date, nullable=False)

@@ -5,7 +5,7 @@ from schemas import (
     UserOut,
     CategoryOut,
     EventOut,
-    NoteCreate,
+    NoteUpdate,
     TimeCreate,
     NoteOut,
     TimeOut,
@@ -16,6 +16,15 @@ DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/pickle"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
+
+
+def get_user():
+    db = SessionLocal()
+    db_user = db.query(DBUser).filter(DBUser.id == 1).first()
+
+    user = UserOut(id=1, name="developer")
+    db.close()
+    return user
 
 
 def get_categories() -> list[CategoryOut]:
@@ -89,9 +98,47 @@ def get_note(event_id: int, user_id: int) -> NoteOut | None:
     return note
 
 
-def edit_note(note_id: int, text: str):
+def add_time(event_id: int, user_id: int, time: TimeCreate) -> TimeOut:
+    db = SessionLocal()
+    time_model = DBTime(**time.model_dump())
+    time_model.event_id = event_id
+    time_model.user_id = user_id
+    db.add(time_model)
+    db.commit()
+    new_time = TimeOut(
+        id=time_model.id,
+        event_id=time_model.event_id,
+        user_id=time_model.user_id,
+        time=time_model.time,
+        date=time_model.date,
+    )
+    db.close()
+    return new_time
+
+
+def create_note(event_id, user_id, note):
+    db = SessionLocal()
+    note_model = DBNote(**note.model_dump())
+    note_model.event_id = event_id
+    note_model.user_id = user_id
+    db.add(note_model)
+    db.commit()
+    db.close()
     return
 
 
-def add_time(event_id, time, date):
+def edit_note(note_id: int, note: NoteUpdate):
+    db = SessionLocal()
+    db_note = (
+        db.query(DBNote)
+        .filter(DBNote.id == note_id and DBNote.user_id == user_id)
+        .first()
+    )
+    if db_note:
+        db_note.text = note.text
+    else:
+        return None
+
+    db.commit()
+    db.close()
     return
