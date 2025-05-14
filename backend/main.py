@@ -52,12 +52,6 @@ async def get_times_and_note(event_id: int, user_id: int):
     return [times, note]
 
 
-@app.post("/api/{event_id}/times")
-async def add_time(event_id: int, user_id: int, time: TimeCreate):
-    new_time = db.add_time(event_id, user_id, time)
-    return
-
-
 @app.post("/api/{event_id}/note")
 async def create_note(event_id: int, user_id: int, note: NoteCreate):
     new_note = db.create_note(event_id, user_id, note)
