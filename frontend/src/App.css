@@ -31,7 +31,7 @@ button {
     color: (27, 44, 151);
     border-radius: 10px;
     font-size: larger;
-    width: 22%;
+    width: 24%;
     margin-top: 12%;
     margin-bottom: 12%;
 }
@@ -39,4 +39,15 @@ button {
 .cats {
     text-align: center;
     width: 35%;
+}
+
+.events {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 75%;
+    margin-left: 15%;
+}
+
+.eve {
+    width: 75%;
 }
