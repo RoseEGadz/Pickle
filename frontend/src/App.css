@@ -1,0 +1,34 @@
+#root {
+    text-align: center;
+    background-color: white;
+}
+
+.icon {
+    max-width: 14%;
+    position: absolute;
+    right: 5%;
+    top: 3%;
+
+}
+
+header {
+    border: solid rgb(27, 44, 151) 5px;
+    border-radius: 15px;
+    background-color: rgb(183, 232, 232);
+}
+
+img {
+    max-width: 100%
+}
+
+.foot {
+    font-size:small;
+}
+
+button {
+    background-color: rgb(183, 232, 232);
+    color: (27, 44, 151);
+    border-radius: 10px;
+    font-size: large;
+    width: 22%;
+}
