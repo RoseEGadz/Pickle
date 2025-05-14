@@ -1,5 +1,8 @@
 import { Routes, Route } from 'react-router';
-import Main from './home.jsx'
+import Main from './pages/home'
+import Categories from './pages/categories'
+import Events from './pages/events'
+import Info from './pages/info'
 import './App.css'
 
 function App() {
@@ -10,6 +13,9 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<Main />} />
+        <Route path='/categories' element={<Categories />} />
+        <Route path='/categories/:id' element={<Events />} />
+        <Route path='/events/:id' element={<Info />} />
       </Routes>
       <Footer />
     </>
