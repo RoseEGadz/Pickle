@@ -26,12 +26,6 @@ class NoteCreate(BaseModel):
     text: str | None
 
 
-class NoteUpdate(BaseModel):
-    user_id: int
-    event_id: int
-    text: str
-
-
 class NoteOut(BaseModel):
     id: int
     user_id: int

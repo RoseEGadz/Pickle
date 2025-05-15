@@ -86,7 +86,7 @@ CREATE TABLE times (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     event_id INT NOT NULL,
-    time INT NOT NULL,
+    time FLOAT NOT NULL,
     date DATE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE

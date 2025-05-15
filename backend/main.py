@@ -46,22 +46,18 @@ async def get_events_by_category(category_id: int) -> list[EventOut]:
 
 
 @app.get("/api/{event_id}")
-async def get_times_and_note(event_id: int, user_id: int):
+async def get_times_and_note(event_id: int):
+    user_id = 1
     times = db.get_times(event_id, user_id)
     note = db.get_note(event_id, user_id)
     return [times, note]
 
 
 @app.post("/api/{event_id}/note")
-async def create_note(event_id: int, user_id: int, note: NoteCreate):
+async def create_note(event_id: int, note: NoteCreate):
+    user_id = 1
     new_note = db.create_note(event_id, user_id, note)
-    return
-
-
-@app.patch("/api/{note_id}/note")
-async def edit_note(note_id: int, note: NoteUpdate):
-    new_note = db.edit_note(note_id, note)
-    return
+    return new_note
 
 
 @app.get("/{file_path}", response_class=FileResponse)

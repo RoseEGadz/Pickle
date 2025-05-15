@@ -118,27 +118,18 @@ def add_time(event_id: int, user_id: int, time: TimeCreate) -> TimeOut:
 
 def create_note(event_id, user_id, note):
     db = SessionLocal()
-    note_model = DBNote(**note.model_dump())
-    note_model.event_id = event_id
-    note_model.user_id = user_id
-    db.add(note_model)
-    db.commit()
-    db.close()
-    return
-
-
-def edit_note(note_id: int, note: NoteUpdate):
-    db = SessionLocal()
     db_note = (
         db.query(DBNote)
-        .filter(DBNote.id == note_id and DBNote.user_id == user_id)
+        .filter(DBNote.event_id == event_id and DBNote.user_id == user_id)
         .first()
     )
     if db_note:
         db_note.text = note.text
     else:
-        return None
-
+        note_model = DBNote(**note.model_dump())
+        note_model.event_id = event_id
+        note_model.user_id = user_id
+        db.add(note_model)
     db.commit()
     db.close()
-    return
+    return note
