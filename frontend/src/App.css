@@ -51,3 +51,39 @@ button {
 .eve {
     width: 75%;
 }
+
+.backy {
+    width: 35%;
+}
+
+textarea {
+    width: 75%;
+    max-height: 100%;
+}
+
+.time-grid {
+    border: 5px solid rgb(27, 44, 151);
+    border-radius: 5px;
+}
+
+.rows {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.left, .right {
+    border: 1px solid rgb(27, 44, 151);
+}
+
+.edit {
+    font-size: smaller;
+    margin: 1% 38% 1% 38%;
+    display: block;
+}
+
+textarea {
+    border: 3px solid rgb(27, 44, 151);
+    border-radius: 10px;
+}

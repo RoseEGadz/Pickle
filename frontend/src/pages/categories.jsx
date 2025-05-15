@@ -23,7 +23,7 @@ export default function Categories() {
 
     return (
     <>
-    <h1>Categories</h1>
+    <h1>Event Categories</h1>
     {categories.map(cat => {
         let imgUrl = ''
         if (cat.id == 1) {

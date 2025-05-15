@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, UNSAFE_getTurboStreamSingleFetchDataStrategy } from 'react-router'
+import { useParams, Link } from 'react-router'
 
 export default function Events() {
     const [events, setEvents] = useState([])
@@ -7,7 +7,7 @@ export default function Events() {
     const [imgUrl, setImgUrl] = useState('')
 
     function getUrl() {
-        let imgUrl = ''
+        let imgUrl = null
         if (id == 1) {
             imgUrl = 'https://static.vecteezy.com/system/resources/thumbnails/002/004/798/small/a-man-swimming-butterfly-vector.jpg'
         } else if (id == 2) {
@@ -44,7 +44,7 @@ export default function Events() {
 
     return (
     <>
-    <h1>Events</h1>
+    <h1>Select an Event to See Times and Note</h1>
     <img src={imgUrl} />
     <div className='events'>
     {events.map(eve => {
@@ -54,10 +54,9 @@ export default function Events() {
         } else {
             olympic = 'Yards:'
         }
-        const linky = `/events/${eve.id}`
-
+        const linky = `/categories/${id}/events/${eve.id}`
         return (
-            <Link to={linky}>
+            <Link to={linky} key={eve.id}>
             <button className='eve' key={eve.id}>{eve.name} {olympic}</button>
             </Link>
         )
