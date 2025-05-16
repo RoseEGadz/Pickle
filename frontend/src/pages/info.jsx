@@ -7,6 +7,8 @@ export default function Info() {
     const [imgUrl, setImgUrl] = useState('')
     const [note, setNote] = useState([])
     const [times, setTimes] = useState([])
+    const [hidden, setHidden] = useState(false)
+    const [show, setShow] = useState(false)
     const userId = 1
 
     function getUrl() {
@@ -25,9 +27,21 @@ export default function Info() {
         return imgUrl
     }
 
-    function handleEdit() {}
+    const handleEdit = async (event) => {
+        event.preventDefaut()
+    };
 
-    function handleAdd() {}
+    const handleAdd = () => {
+        setHidden((prev) => !prev);
+    };
+
+    function handleClick(event) {
+        event.preventDefault()
+    };
+
+    const handleShow = async () => {
+        setShow((prev) => !prev)
+    };
 
     useEffect(() => {
         async function getNoteAndTimes() {
@@ -40,7 +54,6 @@ export default function Info() {
                 const url = getUrl()
                 setImgUrl(url)
                 setTimes(data[0])
-                console.log(times)
                 setNote(data[1])
             } catch(error) {
                 console.error(error)
@@ -63,8 +76,15 @@ export default function Info() {
     return (
     <>
     <img src={imgUrl} />
-    <textarea id='note'>{note.text}</textarea>
-    <button className='edit' onClick={() => handleEdit()}>Edit</button>
+    {hidden && (
+       <form>
+       <textarea id='note'>{note.text}</textarea>
+       <button className='edit' onClick={() => handleEdit('submit')}>Submit</button>
+       </form>
+    )}
+    <h3>Feedback:</h3>
+    <div className='feedback'><p>{note.text}</p></div>
+    <button className='edit' onClick={() => handleShow()}>Edit</button>
     <div className='time-grid'>
         <div className='rows'>
             <div className='left'>Time</div>
@@ -79,7 +99,18 @@ export default function Info() {
         )
     })}
     </div>
-    <button className='edit' onClick={() => handleAdd()}>Add Time</button>
+    <button className='edit' onClick={() => handleAdd()}>{hidden ? 'Back Out' : 'Add Time'}</button>
+    {hidden && (
+        <form>
+            <label htmlFor='time'>Time:</label>
+            <input type='text' id='time' name='time' />
+            <br></br>
+            <label htmlFor='date'>Date: </label>
+            <input type='date' id='date' name='date' />
+            <br></br>
+            <button className='edit' onClick={() => handleClick('submit')}>Submit</button>
+            </form>
+    )}
     <Link to={backy}>
     <button className='backy'>Back to Events</button>
     </Link>
