@@ -6,7 +6,6 @@ from schemas import (
     UserOut,
     CategoryOut,
     EventOut,
-    NoteUpdate,
     NoteCreate,
     TimeCreate,
     NoteOut,
@@ -47,17 +46,24 @@ async def get_events_by_category(category_id: int) -> list[EventOut]:
 
 @app.get("/api/{event_id}")
 async def get_times_and_note(event_id: int):
-    user_id = 1
+    user_id: int = 1
     times = db.get_times(event_id, user_id)
     note = db.get_note(event_id, user_id)
     return [times, note]
+
+
+@app.post("/api/{event_id}/times")
+async def add_time(event_id: int, time: TimeCreate):
+    user_id = 1
+    new_time = db.add_time(event_id, user_id, time)
+    return
 
 
 @app.post("/api/{event_id}/note")
 async def create_note(event_id: int, note: NoteCreate):
     user_id = 1
     new_note = db.create_note(event_id, user_id, note)
-    return new_note
+    return
 
 
 @app.get("/{file_path}", response_class=FileResponse)

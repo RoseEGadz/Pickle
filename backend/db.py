@@ -5,7 +5,7 @@ from schemas import (
     UserOut,
     CategoryOut,
     EventOut,
-    NoteUpdate,
+    NoteCreate,
     TimeCreate,
     NoteOut,
     TimeOut,
@@ -116,7 +116,7 @@ def add_time(event_id: int, user_id: int, time: TimeCreate) -> TimeOut:
     return new_time
 
 
-def create_note(event_id, user_id, note):
+def create_note(event_id: int, user_id: int, note: NoteCreate):
     db = SessionLocal()
     db_note = (
         db.query(DBNote)
