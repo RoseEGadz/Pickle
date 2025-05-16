@@ -9,6 +9,9 @@ export default function Info() {
     const [times, setTimes] = useState([])
     const [hidden, setHidden] = useState(false)
     const [show, setShow] = useState(false)
+    const [noteText, setNoteText] = useState('')
+    const [timeText, setTimeText] = useState('')
+    const [dateText, setDateText] = useState('')
     const userId = 1
 
     function getUrl() {
@@ -28,37 +31,92 @@ export default function Info() {
     }
 
     const handleEdit = async (event) => {
-        event.preventDefaut()
+        console.log('test before prevent default')
+        event.preventDefault()
+        console.log('test prevent default')
+        const headers = {'Content-Type': 'application/json'}
+        const body = JSON.stringify({
+            text: noteText
+        })
+        // NOTE EDITOR
+        try {
+            const request = await fetch(`http://localhost:8000/api/${id2}/note`, {
+                method: "POST",
+                headers: headers,
+                body: body,
+            });
+            console.log(noteText)
+            if (!request.ok) {
+                throw new Error(request.status)
+            }
+            handleShow()
+            await getNoteAndTimes();
+        } catch(error) {
+            console.error(error)
+        }
     };
+    function toFloat(timeString) {
+        const match = /^(\d+):(\d+\.\d+)$/.exec(timeString);
+        if (!match) {
+            return NaN
+        };
+        let minutes = parseInt(match[1], 10);
+        let seconds = parseFloat(match[2]);
+        let float = minutes * 60 + seconds;
+        return float
+    }
 
     const handleAdd = () => {
         setHidden((prev) => !prev);
     };
 
-    function handleClick(event) {
+    const handleClick = async (event) => {
         event.preventDefault()
+        const headers = {'Content-Type': 'application/json'};
+        const time = toFloat(timeText);
+        const body = JSON.stringify({
+        time: time,
+        date: dateText
+    });
+    console.log(dateText)
+        // TIME ADDER
+        try {
+            const request = await fetch(`http://localhost:8000/api/${id2}/times`, {
+                'method': 'Post',
+                headers: headers,
+                body: body
+            })
+            if (!request.ok) {
+                throw new Error(request.status)
+            }
+            handleAdd()
+            await getNoteAndTimes();
+        } catch(error) {
+            console.error(error)
+        }
     };
 
-    const handleShow = async () => {
+    const handleShow = () => {
         setShow((prev) => !prev)
     };
 
-    useEffect(() => {
-        async function getNoteAndTimes() {
+    async function getNoteAndTimes() {
+
             try {
                 const request = await fetch(`http://localhost:8000/api/${id2}`)
                 if (!request.ok) {
                     throw new Error(request.status)
                 }
                 const data = await request.json()
-                const url = getUrl()
-                setImgUrl(url)
+                setImgUrl(getUrl)
                 setTimes(data[0])
                 setNote(data[1])
             } catch(error) {
                 console.error(error)
             }
         }
+
+    useEffect(() => {
         getNoteAndTimes()
     }, [])
 
@@ -73,18 +131,21 @@ export default function Info() {
         return new_time
     }
 
+
+
     return (
     <>
     <img src={imgUrl} />
-    {hidden && (
-       <form>
-       <textarea id='note'>{note.text}</textarea>
-       <button className='edit' onClick={() => handleEdit('submit')}>Submit</button>
-       </form>
-    )}
+
     <h3>Feedback:</h3>
     <div className='feedback'><p>{note.text}</p></div>
-    <button className='edit' onClick={() => handleShow()}>Edit</button>
+    <button className='edit' onClick={() => handleShow()}>{show ? 'Back Out' : 'Edit'}</button>
+    {show && (
+       <form onSubmit={handleEdit}>
+       <textarea id='note' onChange={(event) => setNoteText(event.target.value)} defaultValue={note.text} />
+       <button className='edit' type='submit'>Submit</button>
+       </form>
+    )}
     <div className='time-grid'>
         <div className='rows'>
             <div className='left'>Time</div>
@@ -101,14 +162,14 @@ export default function Info() {
     </div>
     <button className='edit' onClick={() => handleAdd()}>{hidden ? 'Back Out' : 'Add Time'}</button>
     {hidden && (
-        <form>
+        <form onSubmit={handleClick}>
             <label htmlFor='time'>Time:</label>
-            <input type='text' id='time' name='time' />
+            <input type='text' id='time' name='time' onChange={(event) => setTimeText(event.target.value)} />
             <br></br>
             <label htmlFor='date'>Date: </label>
-            <input type='date' id='date' name='date' />
+            <input type='date' id='date' name='date' onChange={(event) => setDateText(event.target.value)} />
             <br></br>
-            <button className='edit' onClick={() => handleClick('submit')}>Submit</button>
+            <button className='edit' type='submit'>Submit</button>
             </form>
     )}
     <Link to={backy}>
