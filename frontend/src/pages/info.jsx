@@ -109,8 +109,21 @@ export default function Info() {
                 }
                 const data = await request.json()
                 setImgUrl(getUrl)
-                setTimes(data[0])
-                setNote(data[1])
+                if (data[0] != null) {
+                    setTimes(data[0])
+                } else {
+                    setTimes({time: 'no times', date: 'no date', id:0})
+                }
+                console.log(times)
+                if (data[1] != null) {
+                    setNote(data[1])
+                } else {
+                    setNote({id: 0, text: 'No Feedback'})
+                }
+
+                console.log(note)
+
+
             } catch(error) {
                 console.error(error)
             }
